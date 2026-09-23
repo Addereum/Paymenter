@@ -117,7 +117,7 @@
     <div style="margin-bottom: 20px;font-size: 20px">
         <strong>{{ __('invoices.status') }}:</strong><span
             style="@if($invoice->status == 'paid') color: green; @else color: orange; @endif">
-            {{ ucfirst($invoice->status) }}
+            {{ $invoice->status == 'pending' ? 'Ausstehend' : ($invoice->status == 'paid' ? 'Bezahlt' : 'Storniert') }}
         </span>
     </div>
 
@@ -224,3 +224,6 @@
 </body>
 
 </html>
+
+
+

@@ -73,8 +73,8 @@ class UploadExtensionService
                 File::deleteDirectory($destinationPath);
             }
 
-            if (!rename($path, $destinationPath)) {
-                throw new \Exception('Failed to move the extension files to the destination.');
+            if (!\Illuminate\Support\Facades\File::copyDirectory($path, $destinationPath)) {
+                $error = error_get_last(); throw new \Exception('Failed to move extension. Path: ' . $path . ' Dest: ' . $destinationPath . ' Error: ' . json_encode($error));
             }
         } catch (\Exception $e) {
             // Clean up the extracted files in case of an error
@@ -190,3 +190,6 @@ class UploadExtensionService
         }
     }
 }
+
+
+
