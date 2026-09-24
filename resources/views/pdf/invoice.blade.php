@@ -180,8 +180,8 @@
                 <td class="header-right">
                     <strong>Rechnungssteller:</strong><br>
                     JURO Digital GbR<br>
-                    [DEINE STRASSE 1]<br>
-                    [12345 DEIN ORT]<br><br>
+                    Nachkamp 22<br>
+                    48324 Sendenhorst-Albersloh<br><br>
                     <strong>E-Mail:</strong> info@juro-digital.de<br>
                     <strong>Web:</strong> juro-digital.de
                 </td>
@@ -195,22 +195,21 @@
             <tr>
                 <td>
                     <strong>Banküberweisung:</strong><br>
-                    [DEINE BANK]<br>
+                    Banking Circle S.A. - German Branch<br>
                     Empfänger: JURO Digital GbR<br>
-                    IBAN: DE00 0000 0000 0000 0000 00<br>
-                    BIC: XXXXXXXX<br>
+                    IBAN: DE63 2022 0800 0045 3413 95<br>
+                    BIC: SXPYDEHHXXX<br>
                     <strong>Verwendungszweck: {{ $invoice->number }}</strong>
                 </td>
                 <td>
                     <strong>Steuerinformationen:</strong><br>
-                    Steuernummer: [DEINE STEUERNUMMER]<br>
-                    USt-IdNr.: [DEINE UST-ID]<br>
-                    Finanzamt [DEIN FINANZAMT]
+                    Steuernummer: 5304059584232<br>
+                    USt-IdNr.: DE465087010<br>
+                    
                 </td>
                 <td>
                     <strong>PayPal Überweisung:</strong><br>
-                    [DEIN PAYPAL.ME LINK]<br>
-                    Empfänger: info@juro-digital.de<br>
+                                        Empfänger: info@juro-digital.de<br>
                     <strong>Verwendungszweck: {{ $invoice->number }}</strong>
                 </td>
             </tr>
@@ -235,7 +234,7 @@
         <!-- Address & Meta Box -->
         <div>
             <div class="address-window">
-                <div class="sender-line">JURO Digital GbR, [DEINE STRASSE 1], [12345 DEIN ORT]</div>
+                <div class="sender-line">JURO Digital GbR, Nachkamp 22, 48324 Sendenhorst-Albersloh</div>
                 <div style="font-size: 13px; line-height: 1.5;">
                     {{ $invoice->user_name }}<br>
                     @if($invoice->user_properties)
