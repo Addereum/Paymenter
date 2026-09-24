@@ -1,229 +1,356 @@
-<html lang="en">
-
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice', ['id' => $invoice->id]) : __('invoices.invoice', ['id' => $invoice->number]) }}</title>
+    <title>{{ __('invoices.invoice', ['id' => $invoice->number]) }}</title>
     <style>
-        body {
-            font-family:
-                system-ui,
-                -apple-system,
-                /* Firefox supports this but not yet `system-ui` */
-                'Segoe UI',
-                Roboto,
-                Helvetica,
-                Arial,
-                sans-serif,
-                'Apple Color Emoji',
-                'Segoe UI Emoji',
-                'DejaVu Sans';
-            font-size: 16px;
+        @page {
+            margin: 120px 50px 150px 50px;
         }
-
-        table {
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 13px;
+            color: #111;
+        }
+        /* Header */
+        header {
+            position: fixed;
+            top: -90px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        .header-table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        table th {
-            text-align: left;
-            color: #999;
-            border-bottom: 2px solid #ddd;
-            padding: 10px 0 15px 0;
-            font-size: 0.75em;
-            text-transform: uppercase;
+        .header-table td {
+            vertical-align: middle;
         }
-
-        table td {
-            padding: 15px 0;
-        }
-
-        table th:last-child {
+        .header-right {
             text-align: right;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #333;
         }
-
-        table tr td {
-            padding: 0;
-        }
-
-        table tr td:last-child {
-            text-align: right;
-        }
-
-        .invoice-items tbody tr:first-child td {
+        
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: -120px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            border-top: 1px solid #ccc;
             padding-top: 10px;
+            font-size: 10px;
+            color: #444;
+            line-height: 1.4;
         }
-
-        .invoice-info {
-            font-size: 0.875em;
-        }
-
-        .invoice-info td {
-            padding: 2px 0;
-        }
-
-        .totals-section {
-            margin-top: 30px;
-            float: right;
-            width: 300px;
-        }
-
-        .totals-table {
+        .footer-table {
             width: 100%;
+            border-collapse: collapse;
+        }
+        .footer-table td {
+            vertical-align: top;
+            width: 33.33%;
+        }
+
+        /* Content */
+        .address-window {
+            margin-top: 20px;
+            float: left;
+            width: 60%;
+        }
+        .sender-line {
+            font-size: 9px;
+            text-decoration: underline;
+            color: #666;
             margin-bottom: 10px;
         }
-
-        .totals-table td {
-            padding: 8px 0;
-            border: none;
+        .meta-box {
+            float: right;
+            width: 35%;
+            margin-top: 10px;
         }
-
-        .totals-table .label {
-            text-align: left;
-            font-weight: normal;
-            color: #666;
-            text-transform: uppercase;
-            font-size: 0.875em;
+        .meta-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
         }
-
-        .totals-table .amount {
+        .meta-table td {
+            padding: 3px 0;
+        }
+        .meta-table td:last-child {
             text-align: right;
-            font-weight: bold;
+        }
+        .clearfix {
+            clear: both;
         }
 
-        .totals-table .total-row {
-            border-top: 2px solid #ddd;
-            font-size: 1.1em;
+        /* Items Table */
+        .invoice-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 50px;
+        }
+        .invoice-items th {
+            text-align: left;
+            background-color: #f4f4f4;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 8px 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .invoice-items th:last-child {
+            text-align: right;
+        }
+        .invoice-items td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px;
+            vertical-align: top;
+        }
+        .invoice-items td:last-child {
+            text-align: right;
         }
 
-        .totals-table .total-row .label {
-            font-weight: bold;
-            color: #000;
+        /* Totals */
+        .totals-section {
+            width: 100%;
+            margin-top: 20px;
         }
+        .totals-table {
+            float: right;
+            width: 40%;
+            border-collapse: collapse;
+        }
+        .totals-table td {
+            padding: 5px;
+            font-size: 12px;
+        }
+        .totals-table td:last-child {
+            text-align: right;
+        }
+        .total-row td {
+            font-weight: bold;
+            font-size: 14px;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            background-color: #f4f4f4;
+        }
+        
+        .tax-note {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #000;
+            float: right;
+        }
+        .status-paid { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+        .status-pending { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+        .status-cancelled { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
     </style>
 </head>
-
 <body>
-    @if(config('settings.logo'))
-    <div style="margin: 20px 0 70px 0;">
-        <img style="height: 30px" src="{{ public_path('storage/' . config('settings.logo')) }}"
-            alt="{{ config('app.name') }}">
-    </div>
-    @endif
 
-    <!-- Invoice status -->
-    <div style="margin-bottom: 20px;font-size: 20px">
-        <strong>{{ __('invoices.status') }}:</strong><span
-            style="@if($invoice->status == 'paid') color: green; @else color: orange; @endif">
-            {{ $invoice->status == 'pending' ? 'Ausstehend' : ($invoice->status == 'paid' ? 'Bezahlt' : 'Storniert') }}
-        </span>
-    </div>
-
-    <table class="invoice-info">
-        <tr>
-            <td rowspan="2" style="font-size: 1em;vertical-align: top;">
-                <strong>{{ __('invoices.issued_to') }}</strong><br>
-                {{ $invoice->user_name }} <br />
-                @foreach($invoice->user_properties as $property)
-                    {{ $property }} <br />
-                @endforeach
-            </td>
-            <td>
-                <strong>{{ strtoupper(__('invoices.bill_to')) }}</strong> <br />
-                {!! nl2br(e($invoice->bill_to)) !!}
-            </td>
-        </tr>
-    </table>
-    <p>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->translatedFormat('d M Y') }}</strong></p>
-    @if($invoice->number)
-    <p>{{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong></p>
-    @endif
-
-    <table style="margin-top: 40px;" class="invoice-items">
-        <thead>
-            <tr>
-                <th>{{ __('invoices.item') }}</th>
-                <th style="width: 100px">{{ __('invoices.quantity') }}</th>
-                <th>{{ __('invoices.unit_price') }}</th>
-                <th>{{ __('invoices.total') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($invoice->items as $item)
+    <!-- Header -->
+    <header>
+        <table class="header-table">
             <tr>
                 <td>
-                    {{ $item->description }}
-                    
-                    @if($item->reference && $item->reference->label)
-                        <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
+                    @if(config('settings.logo'))
+                        <img style="height: 35px;" src="{{ public_path('storage/' . config('settings.logo')) }}" alt="Logo">
+                    @else
+                        <h1 style="margin:0; font-size: 24px;">JURO Digital GbR</h1>
                     @endif
                 </td>
-                <td>{{ $item->quantity }}</td>
-                <td>{{ $item->formattedPrice }}</td>
-                <td>{{ $item->formattedTotal }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <!-- Totals Section -->
-    <div class="totals-section">
-        @if ($invoice->formattedTotal->tax > 0)
-        <table class="totals-table">
-            <tr>
-                <td class="label">{{ __('invoices.subtotal') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}</td>
-            </tr>
-            <tr>
-                <td class="label">
-                    {{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)
+                <td class="header-right">
+                    <strong>Rechnungssteller:</strong><br>
+                    JURO Digital GbR<br>
+                    [DEINE STRASSE 1]<br>
+                    [12345 DEIN ORT]<br><br>
+                    <strong>E-Mail:</strong> info@juro-digital.de<br>
+                    <strong>Web:</strong> juro-digital.de
                 </td>
-                <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
-            </tr>
-            <tr class="total-row">
-                <td class="label">{{ __('invoices.total') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal }}</td>
             </tr>
         </table>
-        @else
-        <table class="totals-table">
-            <tr class="total-row">
-                <td class="label">{{ __('invoices.total') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal }}</td>
+    </header>
+
+    <!-- Footer -->
+    <footer>
+        <table class="footer-table">
+            <tr>
+                <td>
+                    <strong>Banküberweisung:</strong><br>
+                    [DEINE BANK]<br>
+                    Empfänger: JURO Digital GbR<br>
+                    IBAN: DE00 0000 0000 0000 0000 00<br>
+                    BIC: XXXXXXXX<br>
+                    <strong>Verwendungszweck: {{ $invoice->number }}</strong>
+                </td>
+                <td>
+                    <strong>Steuerinformationen:</strong><br>
+                    Steuernummer: [DEINE STEUERNUMMER]<br>
+                    USt-IdNr.: [DEINE UST-ID]<br>
+                    Finanzamt [DEIN FINANZAMT]
+                </td>
+                <td>
+                    <strong>PayPal Überweisung:</strong><br>
+                    [DEIN PAYPAL.ME LINK]<br>
+                    Empfänger: info@juro-digital.de<br>
+                    <strong>Verwendungszweck: {{ $invoice->number }}</strong>
+                </td>
             </tr>
         </table>
-        @endif
-    </div>
+        <!-- Page numbers via DOMPDF inline script -->
+        <script type="text/php">
+            if (isset($pdf)) {
+                $text = "Seite {PAGE_NUM} von {PAGE_COUNT}";
+                $size = 9;
+                $font = $fontMetrics->getFont("Helvetica");
+                $width = $fontMetrics->get_text_width($text, $font, $size) / 2;
+                $x = ($pdf->get_width() - $width) / 2;
+                $y = $pdf->get_height() - 35;
+                $pdf->page_text($x, $y, $text, $font, $size, array(0,0,0));
+            }
+        </script>
+    </footer>
 
-    <div style="clear: both;"></div>
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Address & Meta Box -->
+        <div>
+            <div class="address-window">
+                <div class="sender-line">JURO Digital GbR, [DEINE STRASSE 1], [12345 DEIN ORT]</div>
+                <div style="font-size: 13px; line-height: 1.5;">
+                    {{ $invoice->user_name }}<br>
+                    @if($invoice->user_properties)
+                        @foreach($invoice->user_properties as $property)
+                            {{ $property }}<br>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
 
-    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->count() > 0)
-    <table style="margin-top: 80px;" class="invoice-items">
-        <thead>
-            <tr>
-                <th>{{ __('invoices.transaction_id') }}</th>
-                <th>{{ __('invoices.payment_date') }}</th>
-                <th>{{ __('invoices.amount') }}</th>
-                <th>{{ __('invoices.payment_method') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded) as $transaction)
-            <tr>
-                <td>{{ $transaction->transaction_id }}</td>
-                <td>{{ $transaction->created_at->translatedFormat('d M Y') }}</td>
-                <td>{{ $transaction->formattedAmount }}</td>
-                <td>{{ $transaction->gateway ? $transaction->gateway->name : '' }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    @endif
+            <div class="meta-box">
+                @php
+                    $statusClass = 'status-pending';
+                    $statusText = 'Ausstehend';
+                    if($invoice->status == 'paid') {
+                        $statusClass = 'status-paid';
+                        $statusText = 'Bezahlt';
+                    } elseif($invoice->status == 'cancelled') {
+                        $statusClass = 'status-cancelled';
+                        $statusText = 'Storniert';
+                    }
+                @endphp
+                
+                <table class="meta-table">
+                    <tr>
+                        <td colspan="2" style="text-align:right; padding-bottom:15px;">
+                            <span class="status-badge {{ $statusClass }}">{{ $statusText }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rechnungsnr.:</strong></td>
+                        <td>{{ $invoice->number }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kundennr.:</strong></td>
+                        <td>{{ $invoice->user_id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Datum:</strong></td>
+                        <td>{{ $invoice->created_at->translatedFormat('d.m.Y') }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- Title & Intro -->
+        <div style="margin-top: 60px;">
+            <h1 style="font-size: 22px; margin-bottom: 15px;">Rechnung {{ $invoice->number }}</h1>
+            <p>
+                Ich bitte um eine Begleichung des gesamten Rechnungsbetrages bis spätestens: 
+                <strong>{{ $invoice->due_at ? $invoice->due_at->translatedFormat('d.m.Y') : $invoice->created_at->addDays(14)->translatedFormat('d.m.Y') }}</strong>.
+            </p>
+        </div>
+
+        <!-- Items Table -->
+        <table class="invoice-items">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Pos.</th>
+                    <th style="width: 55%;">Bezeichnung</th>
+                    <th style="width: 10%; text-align: center;">Menge</th>
+                    <th style="width: 15%; text-align: right;">Einzel €</th>
+                    <th style="width: 15%; text-align: right;">Gesamt €</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $pos = 1; @endphp
+                @foreach($invoice->items as $item)
+                <tr>
+                    <td>{{ $pos++ }}</td>
+                    <td>
+                        <strong>{{ $item->description }}</strong>
+                        @if($item->reference && $item->reference->label)
+                            <br><span style="color: #666; font-size: 11px;">{{ $item->reference->label }}</span>
+                        @endif
+                    </td>
+                    <td style="text-align: center;">{{ $item->quantity }}</td>
+                    <td style="text-align: right;">{{ $item->formattedPrice }}</td>
+                    <td style="text-align: right;">{{ $item->formattedTotal }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals-section">
+            <table class="totals-table">
+                @if ($invoice->formattedTotal->tax > 0)
+                    <tr>
+                        <td>Zwischensumme</td>
+                        <td>{{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)</td>
+                        <td>{{ $invoice->formattedTotal->formatted->tax }}</td>
+                    </tr>
+                @endif
+                <tr class="total-row">
+                    <td>Gesamtbetrag</td>
+                    <td>{{ $invoice->formattedTotal }}</td>
+                </tr>
+            </table>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- Notes -->
+        <div class="tax-note">
+            @if ($invoice->formattedTotal->tax == 0)
+                <p>*Umsatzsteuerfreie Leistungen gemäß §19 UStG.</p>
+            @endif
+            <p style="margin-top: 15px;">&lt;----- Zahlungsfrist 14 Tage -----&gt;</p>
+            <p><strong>Vermerk:</strong> Kunde muss manuell den Betrag zahlen.</p>
+        </div>
+
+    </main>
 </body>
-
 </html>
-
-
-
