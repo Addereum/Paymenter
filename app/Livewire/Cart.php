@@ -248,7 +248,6 @@ class Cart extends Component
                             'description' => $service->description,
                         ]);
                     }
-                }
                 } else {
                     // We'll make the service active immediately
                     if ($service->product->server) {
