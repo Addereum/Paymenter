@@ -19,8 +19,8 @@
             top: -90px;
             left: 0;
             right: 0;
-            height: 60px;
-            border-bottom: 2px solid #000;
+            height: 70px;
+            
             padding-bottom: 10px;
         }
         .header-table {
@@ -140,7 +140,7 @@
             font-weight: bold;
             font-size: 14px;
             border-top: 2px solid #000;
-            border-bottom: 2px solid #000;
+            
             background-color: #f4f4f4;
         }
         
@@ -172,7 +172,7 @@
             <tr>
                 <td>
                     @if(config('settings.logo'))
-                        <img style="height: 35px;" src="{{ public_path('storage/' . config('settings.logo')) }}" alt="Logo">
+                        <img style="max-height: 65px; max-width: 250px;" src="{{ public_path('storage/' . config('settings.logo')) }}" alt="Logo">
                     @else
                         <h1 style="margin:0; font-size: 24px;">JURO Digital GbR</h1>
                     @endif
@@ -238,7 +238,13 @@
                 <div class="sender-line">JURO Digital GbR, Nachkamp 22, 48324 Sendenhorst-Albersloh</div>
                 <div style="font-size: 13px; line-height: 1.5;">
                     {{ $invoice->user_name }}<br>
-                    @if($invoice->user_properties)
+                    @if($invoice->user_properties && is_array($invoice->user_properties))
+                        @php $p = $invoice->user_properties; @endphp
+                        @if(isset($p['address'])) {{ $p['address'] }}<br> @endif
+                        @if(isset($p['zip']) || isset($p['city'])) {{ $p['zip'] ?? '' }} {{ $p['city'] ?? '' }}<br> @endif
+                        @if(isset($p['state'])) {{ $p['state'] }}<br> @endif
+                        @if(isset($p['country'])) {{ $p['country'] }}<br> @endif
+                    @elseif($invoice->user_properties)
                         @foreach($invoice->user_properties as $property)
                             {{ $property }}<br>
                         @endforeach
