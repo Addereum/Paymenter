@@ -209,8 +209,9 @@
                 </td>
                 <td>
                     <strong>PayPal Überweisung:</strong><br>
-                                        Empfänger: info@juro-digital.de<br>
-                    <strong>Verwendungszweck: {{ $invoice->number }}</strong>
+                                        Empfänger: paypal@juro-digital.de<br>
+                    <strong>Verwendungszweck: {{ $invoice->number }}</strong><br>
+                    <span style="color: #666; font-size: 8.5px;">WICHTIG: Als Dienstleistung senden<br>(nicht über Familie & Freunde)</span>
                 </td>
             </tr>
         </table>
