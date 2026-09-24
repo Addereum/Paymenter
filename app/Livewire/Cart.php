@@ -224,13 +224,31 @@ class Cart extends Component
 
                 // Create the invoice items
                 if ($item->price->total > 0) {
-                    $invoice->items()->create([
-                        'reference_id' => $service->id,
-                        'reference_type' => Service::class,
-                        'price' => $item->price->total,
-                        'quantity' => $item->quantity,
-                        'description' => $service->description,
-                    ]);
+                    if ($item->price->hasDiscount()) {
+                        $invoice->items()->create([
+                            'reference_id' => $service->id,
+                            'reference_type' => Service::class,
+                            'price' => $item->price->total + $item->price->discount,
+                            'quantity' => $item->quantity,
+                            'description' => $service->description,
+                        ]);
+                        $invoice->items()->create([
+                            'reference_id' => $cart->coupon_id,
+                            'reference_type' => '\App\Models\Coupon',
+                            'price' => -($item->price->discount),
+                            'quantity' => $item->quantity,
+                            'description' => 'Rabatt (Code: ' . $cart->coupon->code . ')',
+                        ]);
+                    } else {
+                        $invoice->items()->create([
+                            'reference_id' => $service->id,
+                            'reference_type' => Service::class,
+                            'price' => $item->price->total,
+                            'quantity' => $item->quantity,
+                            'description' => $service->description,
+                        ]);
+                    }
+                }
                 } else {
                     // We'll make the service active immediately
                     if ($service->product->server) {
